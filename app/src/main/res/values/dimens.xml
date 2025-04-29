@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="heart_size">24dp</dimen>
+    <dimen name="heart_horizon">20dp</dimen>
+    <dimen name="button_margin">10dp</dimen>
+    <dimen name="button_width">0dp</dimen>
+    <dimen name="margin_bottom">16dp</dimen>
+    <dimen name="matrix_height">1000dp</dimen>
+    <dimen name="elk_width_height">90dp</dimen>
+</resources>
