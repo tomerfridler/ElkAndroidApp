@@ -10,7 +10,6 @@ import android.os.VibratorManager
 import android.widget.Toast
 import java.lang.ref.WeakReference
 
-
 class SignalManager private constructor(context: Context) {
     private val contextRef = WeakReference(context)
 

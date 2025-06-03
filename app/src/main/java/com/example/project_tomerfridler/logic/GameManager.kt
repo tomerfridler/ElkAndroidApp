@@ -1,78 +1,103 @@
 package com.example.project_tomerfridler.logic
 
 class GameManager(
-    private val numRows: Int = 4,
-    private val numCols: Int = 3,
-    private val lifeCount:Int = 3
-){
+    private val rowsNum: Int = 6,
+    private val colsNum: Int = 5,
+    private val lifeCount: Int = 3,
+) {
 
-    private val matrix = Array(numRows) { IntArray(numCols) { 0 } }
+    private val theMatrix = Array(rowsNum) { IntArray(colsNum) { 0 } }
 
-    private var theFirstMove = true
+    var userMoved: Boolean = false
 
-    var elkCol: Int = numCols / 2
+    private var firstMove = true
+
+    var carCol: Int = colsNum / 2
         private set
 
     var wrongAnswers: Int = 0
         private set
 
+    var score: Int = 0
+        private set
+
+    var collectedCoin: Boolean = false
+
     val isGameOver: Boolean
         get() = wrongAnswers >= lifeCount
 
-    fun moveLeft() {
-        if(elkCol > 0) elkCol--
-        }
+    var distance: Int = 0
+        private set
 
-    fun moveRight() {
-        if(elkCol < numCols - 1) elkCol++
+    fun increaseDistanceBy(units: Int) {
+        distance += units
     }
 
-    fun move() {
-        if (!theFirstMove) {
-            down()
-            checkIfCrash()
-        }
-        theFirstMove = false
-        updateElkMat()
+    fun mRight() {
+        if (carCol < colsNum - 1) carCol++
     }
 
-    private fun down()
-    {
-        for(row in numRows - 1 downTo 1)
-        {
-            for(col in 0 until  numCols)
-            {
-                matrix[row][col] = matrix[row - 1][col]
+    fun mLeft() {
+        if (carCol > 0) carCol--
+    }
+
+    fun gameMove() {
+        if (!firstMove) {
+            if (!userMoved) {
+                mDown()
+            }
+            checkIsStop()
+        }
+        firstMove = false
+        updateCarInMatrix()
+        userMoved = false
+    }
+
+
+    fun getMatrix(): Array<IntArray> = theMatrix
+
+    private fun checkIsStop() {
+        when (theMatrix[rowsNum - 1][carCol]) {
+            1 -> {
+                wrongAnswers++
+                theMatrix[rowsNum - 1][carCol] = 3
+            }
+            4 -> {
+                score += 10
+                theMatrix[rowsNum - 1][carCol] = 0
+                collectedCoin = true  //
             }
         }
-        for(col in 0 until numCols)
-        {
-            matrix[0][col] = 0
-        }
-
-        val randomC = (0 until numCols).random()
-        matrix[0][randomC] = 1
     }
 
+    private fun mDown() {
+        for (row in rowsNum - 1 downTo 1) {
+            for (col in 0 until colsNum) {
+                theMatrix[row][col] = theMatrix[row - 1][col]
+            }
+        }
 
-    private fun checkIfCrash() {
-        if (matrix[numRows - 1][elkCol] == 1) {
-            wrongAnswers++
-            matrix[numRows - 1][elkCol] = 3
+        for (col in 0 until colsNum) {
+            theMatrix[0][col] = 0
+        }
+
+        val randomCol = (0 until colsNum).random()
+        val objectType = if ((0..1).random() == 0) 1 else 4
+        theMatrix[0][randomCol] = objectType
+    }
+
+    private fun updateCarInMatrix() {
+        for (col in 0 until colsNum) {
+            if (theMatrix[rowsNum - 1][col] == 2) {
+                theMatrix[rowsNum - 1][col] = 0
+            }
+        }
+        if (theMatrix[rowsNum - 1][carCol] == 0) {
+            theMatrix[rowsNum - 1][carCol] = 2
         }
     }
 
-    private fun updateElkMat(){
-        for (col in 0 until numCols)
-        {
-            if(matrix[numRows - 1][col] == 2)
-                matrix[numRows - 1][col] = 0
-        }
-        if(matrix[numRows - 1][elkCol] == 0)
-            matrix[numRows - 1][elkCol] = 2
+    fun resetScore(){
+        score = 0
     }
-
-
-    fun getMatrix(): Array<IntArray> = matrix
-
 }
